@@ -1,0 +1,103 @@
+x-shared-config: &shared-service-config
+  env_file:
+    - .env
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+name: local
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Database
+  # ---------------------------------------------------------------------------
+  postgres:
+    <<: *shared-service-config
+    image: pgvector/pgvector:pg18
+    container_name: app_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app_pg_db}
+      POSTGRES_USER: ${POSTGRES_USER:-pguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpassword}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Redis Cache
+  # ---------------------------------------------------------------------------
+  redis:
+    <<: *shared-service-config
+    image: redis:alpine
+    container_name: app_redis
+    command: redis-server --save 60 1 --loglevel notice
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    restart: unless-stopped
+
+    # ---------------------------------------------------------------------------
+    # n8n
+    # ---------------------------------------------------------------------------
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.48.7
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+        - "5678:5678"
+    environment:
+        - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
+        - TZ=${GENERIC_TIMEZONE:-UTC}
+        - N8N_SECURE_COOKIE=false
+        - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+        # Uncomment ONLY for local plain-HTTP testing over LAN/IP (never in production):
+        # - N8N_SECURE_COOKIE=false
+    volumes:
+        - n8n_data:/home/node/.n8n
+    networks:
+        - app_network
+    healthcheck:
+        test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5678/healthz/readiness || exit 1"]
+        interval: 15s
+        timeout: 5s
+        retries: 5
+        start_period: 30s
+
+# -----------------------------------------------------------------------------
+# Persisted Data Storage
+# -----------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    name: postgres-volume
+    driver: local
+  redis_data:
+    name: redis-volume
+    driver: local
+  n8n_data:
+    name: n8n-volume
+    driver: local
+
+# -----------------------------------------------------------------------------
+# Isolated Container Network
+# -----------------------------------------------------------------------------
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1
+
+  host_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+          gateway: 172.29.0.1

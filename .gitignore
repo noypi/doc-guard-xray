@@ -1,0 +1,129 @@
+# ==========================================
+# Frontend (Next.js / React) -> /frontend
+# ==========================================
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# Build & Cache
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.cache/
+frontend/.eslintcache
+frontend/.turbo/
+frontend/.swc/
+frontend/coverage/
+
+# TypeScript & Vercel
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+frontend/.vercel/
+
+# Frontend Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# ==========================================
+# Backend (Spring Boot / Java) -> /backend
+# ==========================================
+backend/*.class
+backend/*.jar
+backend/*.war
+backend/*.nar
+backend/*.ear
+
+# Maven
+backend/target/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/pom.xml.next
+backend/release.properties
+backend/dependency-reduced-pom.xml
+backend/buildNumber.properties
+backend/.mvn/timing.properties
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+backend/.gradle/
+backend/gradle-app.setting
+!backend/gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.properties
+backend/build/
+
+# Spring Boot Logs & Crash Dumps
+backend/logs/
+backend/*.log
+backend/hs_err_pid*
+backend/replay_pid*
+
+# ==========================================
+# n8n Workflows & Templates -> /n8n-templates
+# ==========================================
+# Local n8n runtime data, SQLite DB & encryption keys
+n8n-templates/.n8n/
+n8n-templates/*.sqlite
+n8n-templates/*.sqlite-journal
+n8n-templates/*.db
+n8n-templates/config
+
+# Exported credentials & local execution dumps
+n8n-templates/*credential*.json
+n8n-templates/*secret*.json
+n8n-templates/binaryData/
+n8n-templates/.cache/
+
+# ==========================================
+# Environment & Secrets (Global)
+# ==========================================
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-local.yaml
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-secret.*
+
+# ==========================================
+# IDEs & OS (Global)
+# ==========================================
+# IntelliJ IDEA / JetBrains
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# macOS & Windows
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+docs/*
+.vscode/

@@ -1,0 +1,52 @@
+spring:
+    application:
+        name: docguardxray
+    threads:
+        virtual:
+            enabled: true
+    datasource:
+        url: jdbc:postgresql://127.0.0.1:5432/docguard
+        username: pguser
+        hikari:
+            maximum-pool-size: 5
+            minimum-idle: 0 # set to maximum-pool-size for always-on production Postgres
+            max-lifetime: 240000 # 4 minutes
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: validate
+    servlet:
+        multipart:
+            max-file-size: 2MB
+    lifecycle:
+        timeout-per-shutdown-phase: 20s
+    ai:
+        google:
+            genai:
+                api-key: ${GEMINI_API_KEY_DOCGUARD}
+                chat:
+                    model: gemini-3.5-flash-lite
+                embedding:
+                    api-key: ${GEMINI_API_KEY_DOCGUARD}
+                    text:
+                        model: gemini-embedding-001
+                        dimensions: 768 
+                        # google default is 3072
+                        # pgvector's HNSW and IVFFlat indexes have a 2,000-dimension upper limit 
+        vectorstore:
+            pgvector:
+                dimensions: 768 # matches google embedding model's dimensions
+                initialize-schema: false
+        mcp:
+            server:
+                protocol: STREAMABLE # or STATELESS
+server:
+    shutdown: graceful
+
+docguard:
+    cors:
+        allowed-origins: 
+            - http://localhost:3000
+            - http://localhost:8080
+    auth:
+        demo-switch-enabled: true

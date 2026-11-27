@@ -31,7 +31,7 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/actuator/health").permitAll() // Allow all requests to /actuator/health
+                    .requestMatchers("/actuator/health", "/error").permitAll() // Allow all requests to /actuator/health
                     .requestMatchers("/api/v1/public/**").permitAll()
                     .requestMatchers("/api/v1/**", "/mcp/**").authenticated()
                     .anyRequest().denyAll())

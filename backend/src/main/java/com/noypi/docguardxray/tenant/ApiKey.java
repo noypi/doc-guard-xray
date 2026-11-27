@@ -3,6 +3,8 @@ package com.noypi.docguardxray.tenant;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.hibernate.annotations.Generated;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ public class ApiKey {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @Generated
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private Instant createdAt;
 

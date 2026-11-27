@@ -20,10 +20,10 @@ public class TenantRlsAspect {
 
     @Before("execution(* com.noypi.docguardxray..*Repository.*(..))")
     public void applyTenantSession() {
-        TenantContext.getTenantId().ifPresent(tenantId -> {
+        TenantContext.current().ifPresent(tenantInfo -> {
             try (var conn = dataSource.getConnection();
                 var stmt = conn.prepareStatement("SELECT set_config('app.current_tenant_id', ?, true)")) {
-                stmt.setString(1, tenantId.toString());
+                stmt.setString(1, tenantInfo.tenantId().toString());
                 stmt.execute();
             } catch (SQLException e) {
                 throw new RuntimeException("Failed to set tenant ID in session", e);

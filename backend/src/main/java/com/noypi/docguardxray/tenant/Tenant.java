@@ -3,6 +3,8 @@ package com.noypi.docguardxray.tenant;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.hibernate.annotations.Generated;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,12 +31,13 @@ public class Tenant {
     private String name;
 
     @Column(name = "monthly_tokens", nullable = false)
-    private long monthlyTokens = 1000_000L; // default to 1 million tokens
+    private int monthlyTokens = 1000_000; // default to 1 million tokens
 
+    @Generated
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private Instant createdAt;
 
-    public Tenant() {}
+    protected Tenant() {}
     
     public UUID getId() {
         return id;
@@ -56,7 +59,7 @@ public class Tenant {
         return name;
     }
 
-    public long getMonthlyTokens() {
+    public int getMonthlyTokens() {
         return monthlyTokens;
     }
 }

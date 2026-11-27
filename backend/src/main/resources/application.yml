@@ -1,3 +1,11 @@
+app:
+    zone-id: Asia/Manila
+
+logging:
+    level:
+        '[com.noypi.docguardxray]': DEBUG
+        '[org.springframework.security]': DEBUG
+
 spring:
     application:
         name: docguardxray
@@ -35,11 +43,22 @@ spring:
                         # pgvector's HNSW and IVFFlat indexes have a 2,000-dimension upper limit 
         vectorstore:
             pgvector:
+                #table-name: custom_table_name, defaults to vector_store
                 dimensions: 768 # matches google embedding model's dimensions
                 initialize-schema: false
         mcp:
             server:
                 protocol: STREAMABLE # or STATELESS
+
+management:
+    otlp:
+        metrics:
+            export:
+                enabled: false
+    tracing:
+        export:
+            enabled: false
+
 server:
     shutdown: graceful
 
